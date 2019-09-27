@@ -12,15 +12,18 @@ s.connect(('127.0.0.1', port))
 # recibiendo cosas del servidor 
 print(s.recv(1024))
 
-t = input("Pon un mensaje...")
-if t == "s":
-	break
-else:
+while True:
+	t = input("Pon un mensaje: ")
 	s.sendall(bytes(t, 'utf-8'))
-
+	if t == "info":
+		print(s.recv(1024).decode())
+	#elif t[0:2] == "eco":
+		#print(s.recv(1024).decode()) 
+	if t == 's':
+		break
+#print(s.recv(1024))
+print("sale")
 s.sendall(b'BYE!') 
-# close the connection 
+# cerrando conexion
 s.close()	 
-#except:
-	#print("Fallo...")
 #\trigo\Escritorio\GIT HUB\Python\Cliente-Servidor

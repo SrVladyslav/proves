@@ -1,5 +1,32 @@
-import socket			 
+import socket
+import _thread as t		
+import sys
 
+def cliente (c, addr, client):
+	print('Peticion entrante de: ', addr) 
+	# Devolviendo un mensaje por los jajas. 
+	c.sendall(b'Bienvenidos al servidor, pulsa s para salir o info para informacion') 
+	vivo = 1
+	while vivo == 1:
+		try:
+			#recibiendo mensajes
+			data = (c.recv(1024)).decode()
+			if data == 's':
+				vivo = 0
+			elif data == "info":
+				#admin = input("Admin: ")
+				admin = "Respondido por el servidor!"# + admin
+				c.sendall(bytes(admin,('utf-8')))
+				print(f"El cliente <", client,f">pidio la info!")
+			#elif data[0:2] == "eco":
+			#	c.sendall(bytes(data,('utf-8')))
+			#	print(f"El cliente <", client,f">ejecuto eco!")
+			else:
+				print(f"Cliente <",client ,f">:  " + data)
+		except: 
+			vivo = 0
+			c.close()
+	print(f"===Cliente <" ,client ,f"> se ha desconectado.===")
 
 # creamos el bjeto del socket 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -19,19 +46,13 @@ print("socket escuchando...")
 print("==========================CONEXIONES=========================")		
 clientes = 0
 # bucle de escucha que acepta las peticiones
-while clientes < 3: 
+while clientes < 5	: 
 	# estableciendo la conexion con el cliente 
-	c, addr = s.accept()	 
+	c, addr = s.accept()
+	t.start_new_thread(cliente, (c, addr, clientes))	 
 	clientes += 1
-	print('Peticion entrante de: ', addr) 
 
-	# Devolviendo un mensaje por los jajas. 
-	c.sendall(b'Bienvenidos al servidor pirata!') 
-
-	#recibiendo mensajes
-	print(f"Cliente " ,clientes ,f"dice:" + str(c.recv(2048)))
-	#hacemos un simple Eco
-	c.sendall(c.recv(1024))
-	# cerrando la conexion (IMPORTANTE o SUSPENDEIS) 
-	c.close() 
+# cerrando la conexion (IMPORTANTE o SUSPENDEIS) 
+c.close()
+	
 
