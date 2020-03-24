@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dictionary</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+	<style>
+		body {
+			text-align: center;
+			display: flex;
+			flex-direction: column;
+		}
+
+		.text {
+			font-size: 5em;
+		}
+
+		#but {
+			font-size: 2em;
+			border-radius: 80px;
+			background-color: white;
+			border: 2px solid red;
+			width: 300px;
+			align-self: center;
+			margin: 5px;
+		}
+
+		img {
+			width: 300px;
+			height: auto;
+		} 
+	    
+	</style>
+</head>
+<body>
+	<div>
+		<img src="https://4.bp.blogspot.com/-o7jkqOCKQMQ/WNsqRkNVdcI/AAAAAAAAyTI/USawOzLZMdQBfe4gTcLgosMW4Y-ImfxAwCPcB/s1600/js-jquery.png"alt="IMG">
+	</div>
+	<div data-translate="title" class="text"></div>
+	<div data-translate="text" class="text"></div>
+	<button onclick="change_lang()" id="but">>>></button>
+	<button onclick="change_to('es')" id="but">spanish</button>
+	<button onclick="change_to('en')" id="but">english</button>
+	<button onclick="change_to('ca')" id="but">valencian</button>
+
+	<script>
+		// Lang info
+		var langs = ['en', 'es','ca']
+		var lang_index = 0
+
+
+		// This could be extern JSON file, but for proove it doesn´t matter
+		var dictionary = {
+			'title':{
+				'es':'Titulo',
+				'en':'Title',
+				'ca':'Titol'
+			},
+			'text':{
+				'en':'Text: it is just a POC',
+				'es':'Texto: solo es una prueba de concepto',
+				'ca':'Text: a soles es una prova de concepte'
+			}
+		}
+		// The page will appear in english
+		var current_lang = langs[lang_index]
+
+
+		window.change_lang = function() {
+			// Selecting the next lang
+			past_lang = langs[lang_index]
+		    lang_index = ++lang_index % 3
+		    current_lang = langs[lang_index]
+		    document.getElementById('but').innerHTML = '>>>'
+		    translate()
+		}
+
+		window.change_to = function(lang) {
+			// Selecting the next lang
+			past_lang = langs[lang_index]
+			if('en' == lang){
+				lang_index = 0
+			}else if('es' == lang){
+				lang_index = 1
+			}else {
+				lang_index = 2
+			}
+		    current_lang = lang
+		    translate()
+		}
+
+		function translate() {
+		    $("[data-translate]").each(function(){
+		        var key = $(this).data('translate')
+		        $(this).html(dictionary[key][current_lang] || "N/A")
+		    });
+		}
+
+		translate();
+	</script>
+</body>
+</html>
