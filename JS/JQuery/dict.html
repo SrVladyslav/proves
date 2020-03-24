@@ -30,6 +30,7 @@
 		} 
 	    
 	</style>
+	<script src="dict.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body>
 	<div>
@@ -46,21 +47,7 @@
 		// Lang info
 		var langs = ['en', 'es','ca']
 		var lang_index = 0
-
-
-		// This could be extern JSON file, but for proove it doesn´t matter
-		var dictionary = {
-			'title':{
-				'es':'Titulo',
-				'en':'Title',
-				'ca':'Titol'
-			},
-			'text':{
-				'en':'Text: it is just a POC',
-				'es':'Texto: solo es una prueba de concepto',
-				'ca':'Text: a soles es una prova de concepte'
-			}
-		}
+		
 		// The page will appear in english
 		var current_lang = langs[lang_index]
 
