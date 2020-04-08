@@ -1,0 +1,6 @@
+# These are the libraries will be used for this lab.
+
+import numpy as np 
+import matplotlib.pyplot as plt
+import torch
+import pandas as pd
