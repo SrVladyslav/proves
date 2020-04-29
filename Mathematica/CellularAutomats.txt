@@ -1,0 +1,116 @@
+(*Transforma decimales a binario*)
+
+Num2Bin[num_] := Module[{i, n, aux, v},
+      n = num;
+      aux = {};
+      For[i = 1, i <= 8, i += 1,
+        v = Mod[n, 2];
+         AppendTo[aux, v];
+        (*Print[Mod[n, 2]];*)
+        n = Quotient[n, 2];
+        ];
+      Return[aux];
+      ];
+
+(*Nos devuelve la regla que pertene al binario introducido en forma \
+de lista*)
+Bin2Regla[lista_] := Module[{l, i, regla},
+   regla = {{0, 0, 0}, {0, 0, 1}, {0, 1, 0}, {0, 1, 1}, {1, 0, 0}, {1,
+       0, 1}, {1, 1, 0}, {1, 1, 1}};
+   For[i = 1, i <= Length[lista], i += 1,
+    regla[[i]] = AppendTo[regla[[i]], lista[[i]]];
+    ];
+   Return[regla];
+   ];
+
+(*Aplicamos la transformacion a la lista actual de entrada*)
+
+AplicaRegla[lista_, regla_] := 
+  Module[{i, nLista, izda, dcha, transicion},
+   (*Print["Lista:", lista];*)
+   nLista = {};
+   For[i = 1, i <= Length[lista], i += 1,
+    (*Print["Iteracion: ", i];*)
+    (*Obtengo las transiciones*)
+    
+    izda = lista[[i - 1]];
+    dcha = lista[[i + 1]];
+    (*Caso 1, i \[Equal] 1*)
+    If[i == 1,
+     	(*Print["Entrando al primero"];*)
+     	
+     izda = lista[[Length[lista]]];
+     	dcha = lista[[i + 1]];
+     ];
+    
+    (*Caso 2, i \[Equal] Length[lista]*)
+    If[i == Length[lista],
+     (*Print["Entrando al Ultimo"];*)
+     	izda = lista[[i - 1]];
+     	dcha = lista[[1]];
+     ]; 
+    (*Actualizamos la lista con el nuevo valor*)
+    (*Print["I: ",
+    izda, " M: ",lista[[i]], " D: ",dcha];*)
+    
+    transicion = Cases[regla, {izda, lista[[i]], dcha, _ }];
+    (*Print["Transicion: ", transicion];*)
+    
+    nLista = AppendTo[nLista, transicion[[1, 4]]];
+    ];
+   Return[nLista];
+   ];
+
+(*Programa de animacion en si*)
+
+AC[Initial_List, Regla_Integer, t_Integer] := 
+  Module [{i, j, lista, regla, reg, animacion, aMostrar, 
+    configuraciones , nLista, binario, plot},
+   aMostrar = {};
+   lista = Initial;
+   j = 100;
+   regla = Regla;
+   configuraciones = {};
+   (*Convierto a binario*)
+   binario = Num2Bin[regla];
+   reg = Bin2Regla[binario];
+   (*Empiezo a obtener configuraciones*)
+   
+   For[i = 1, i <= j, i += 1,
+    	lista = AplicaRegla[lista, reg];
+    	(*Print[lista];*)
+    	
+    configuraciones = AppendTo[configuraciones, lista];
+    ];
+   For[i = 1, i <= t, i += 1,
+    	configuraciones = Drop[configuraciones, 1];
+    	lista = AplicaRegla[lista, reg];
+    	(*Print[lista];*)
+    	
+    configuraciones = AppendTo[configuraciones, lista];
+    	aMostrar = AppendTo[aMostrar, ArrayPlot[configuraciones]];
+    ];
+   (*ArrayPlot[configuraciones]*)
+   ListAnimate[aMostrar, 5]
+   ];
+
+(*Ejecucion prueba*)
+
+lista = {1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 01, 1, 0, 0, 1, 1, 1, 1, 1, 0, 
+   0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 
+   0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 
+   1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 0, 
+   0, 1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 1, 
+   1, 1, 0, 0, 1, 0, 1, 0, 1};
+(*
+1,0,1,0,1,0,0,0,1,1,0,0,1,1,1,1,1,0,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,\
+0,1,1,0,0,1,1,1,1,1,0,0,1,0,1,0,1,0,1,0,0,0,1,1,0,0,1,1,1,1,1,0,0,1};
+l = Num2Bin[54]
+regla = Bin2Regla[l]
+Print["Regla",regla];
+nLista = AplicaRegla[lista, regla]
+
+ArrayPlot[{{1,0,1,0,1}}]*)
+
+(*AC[lista, 54, 5]*)
+AC[lista, 18, 100] 
