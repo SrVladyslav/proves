@@ -14,7 +14,7 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ## -*- texinfo -*- 
-## @deftypefn {} {@var{retval} =} pca (@var{input1}, @var{input2})
+## @deftypefn {} {@var{retval} =} pintaPCA (@var{input1}, @var{input2})
 ##
 ## @seealso{}
 ## @end deftypefn
@@ -22,28 +22,10 @@
 ## Author: MAZURKEVYCH <vlama@EVIRL-015-OK>
 ## Created: 2020-03-03
 
-function [media, W] = pca(X)
-  # Calcula la media m de los datos de entrenamiento X
-  #X = X'; Los datos en MNIST ya vienen transpuestos por filas
-  media = sum(X) / rows(X);
-
-  #Restar la media a todos los datos de entrenamiento para obtener la Xm
-  Xm = X - media;
-  
-  #Calcula la matriz de covarianza Xm' * Xm
-  covarianza = (Xm' * Xm) / rows(X);
-  
-  #Calcula los valores y vectores propios (eig)
-  [vectPropios, valPropios] = eig(covarianza);
-  
-  #Ordena los vectores propios con Sort
-  [Vector, Indice] = sort(diag(valPropios), "descend");
-  
-  % Obtengo la matriz de pesos
-  W = vectPropios(:,Indice);
-  
+function pintaPCA(W, primeros)
+  for i=1:primeros
+    xr = reshape(W(:,i), 28,28);
+    imshow((xr)', []);
+    pause(2);
+  endfor
 end
-
-
-
-
